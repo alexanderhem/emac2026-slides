@@ -1,0 +1,1748 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Consumer Fairness Perceptions | EMAC 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0f2f4;
+  --dark: #111111;
+  --mid: #4a4e5a;
+  --muted: #9098a8;
+  --border: #d6dae0;
+  --white: #ffffff;
+  --accent: #C61932;
+  --accent-dark: #9E182F;
+  --secondary: #24AEBC;
+  --secondary-dark: #1a8a97;
+  --slide-w: 1600;
+  --slide-h: 900;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: #1c1c1c;
+  font-family: 'Barlow', sans-serif;
+}
+
+#scaler {
+  position: fixed;
+  top: 0; left: 0;
+  width: 1600px;
+  height: 900px;
+  transform-origin: 0 0;
+}
+
+/* ---- PROGRESS ---- */
+#progress-bar {
+  position: absolute;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+  z-index: 999;
+}
+
+/* ---- SLIDES ---- */
+.slide {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  overflow: hidden;
+}
+.slide.active { opacity: 1; pointer-events: all; }
+
+/* Step reveals */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+.reveal-item.visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.slide-dark { background: var(--dark); }
+
+/* Top bar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px 88px 0;
+  height: 66px;
+  flex-shrink: 0;
+}
+.section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.slide-dark .section-label { color: rgba(255,255,255,0.35); }
+.slide-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+.slide-dark .slide-num { color: rgba(255,255,255,0.25); }
+
+/* Content */
+.content {
+  flex: 1;
+  padding: 48px 88px 68px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Rule */
+.rule {
+  width: 36px; height: 3px;
+  background: var(--accent);
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+/* Typography */
+.h1 {
+  font-family: 'Epilogue', sans-serif;
+  font-size: 58px;
+  font-weight: 900;
+  line-height: 1.06;
+  color: var(--dark);
+  letter-spacing: -0.025em;
+}
+.h2 {
+  font-family: 'Epilogue', sans-serif;
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--dark);
+  letter-spacing: -0.022em;
+}
+.h3 {
+  font-family: 'Epilogue', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--dark);
+}
+.h4 {
+  font-family: 'Epilogue', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 5px;
+}
+.body {
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--mid);
+}
+.small {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--mid);
+}
+.caption {
+  font-size: 13px;
+  color: var(--muted);
+}
+.mono {
+  font-family: 'Barlow Condensed', sans-serif;
+}
+.accent { color: var(--accent); }
+
+/* Tags */
+.tag {
+  display: inline-block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 6px;
+}
+.tag-yes  { background: rgba(198,25,50,0.1); color: var(--accent); }
+.tag-part { background: rgba(217,119,6,0.1); color: #b45309; }
+.tag-no   { background: rgba(0,0,0,0.06); color: #6b7280; }
+
+/* Cards */
+.card {
+  background: var(--white);
+  padding: 32px 34px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.055);
+}
+.card-accent { border-top: 3px solid var(--accent); }
+.card-muted  { border-top: 3px solid var(--border); }
+.card-border { border: 1.5px solid var(--border); }
+.card-border-accent { border: 1.5px solid var(--accent); }
+
+.card-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.card-label-accent { color: var(--accent); }
+
+/* Grid helpers */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+.flex-row { display: flex; gap: 28px; }
+.flex-col { display: flex; flex-direction: column; }
+
+/* Stat inline */
+.stat-inline {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  display: inline-block;
+  background: rgba(0,0,0,0.04);
+  padding: 5px 12px;
+  margin-top: 8px;
+  border-radius: 6px;
+}
+
+/* ================================================================
+   SLIDE-SPECIFIC STYLES
+================================================================ */
+
+/* ----- S0: TITLE ----- */
+#s0 { background: var(--bg); }
+.emac-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); padding-left: 18px; border-left: 1px solid var(--border);
+  line-height: 1.65; flex-shrink: 0; text-align: right;
+}
+
+/* ----- S1: HOOK SPLIT ----- */
+.hook-split { display: flex; flex: 1; min-height: 0; }
+.hook-text-col {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  padding-right: 52px;
+}
+.hook-img-col {
+  width: 720px; flex-shrink: 0;
+  position: relative; overflow: hidden;
+  margin: -48px 0 0 0;
+}
+.bento-grid {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-8deg) scale(1.28);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 270px 205px 235px;
+  gap: 16px;
+  width: 720px;
+}
+
+/* ----- S1: HOOK ----- */
+.hook-big {
+  font-family: 'Epilogue', sans-serif;
+  font-size: 72px; font-weight: 800;
+  line-height: 1.04;
+  color: var(--dark);
+  letter-spacing: -0.025em;
+}
+.hook-sub {
+  font-size: 22px; color: var(--mid);
+  margin-top: 28px; line-height: 1.5;
+  max-width: 680px;
+}
+.hook-source {
+  font-size: 12px; color: var(--muted);
+  margin-top: 44px; font-style: italic;
+}
+
+/* ----- S2: GAP ----- */
+.gap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  flex: 1;
+}
+.gap-span { grid-column: 1 / -1; }
+.known-card {
+  padding: 30px 32px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.045);
+}
+.gap-card {
+  padding: 30px 32px;
+  border: 1.5px solid var(--accent);
+  background: rgba(198,25,50,0.035);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(198,25,50,0.08);
+}
+
+/* ----- S3: THEORY ----- */
+.pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; flex: 1; }
+.pillar {
+  padding: 32px 30px;
+  background: var(--white);
+  border-top: 3px solid var(--accent);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  display: flex; flex-direction: column;
+}
+.pillar-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 44px; font-weight: 700;
+  color: rgba(198,25,50,0.12);
+  line-height: 1; margin-bottom: 14px;
+}
+.pillar-body { font-size: 15px; line-height: 1.65; color: var(--mid); flex: 1; }
+.pillar-cite { font-size: 12px; color: var(--muted); margin-top: 14px; font-style: italic; }
+
+/* ----- S5: METHODS ---- */
+.condition-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.cond-box {
+  padding: 28px 32px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.cond-box.ai { border-color: var(--secondary); }
+.cond-type {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
+}
+.cond-box.ai .cond-type { color: var(--secondary); }
+
+/* ----- S7: BAR CHART ----- */
+.barchart-wrap {
+  display: flex; align-items: flex-end; justify-content: center; gap: 56px;
+  padding-top: 16px; flex: 1;
+}
+.bar-col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.bar-track {
+  width: 100px; height: 340px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.bar-fill {
+  width: 100%;
+  border-radius: 6px 6px 0 0;
+  height: 0;
+}
+.bar-fill.human { background: var(--dark); }
+.bar-fill.ai    { background: var(--secondary); }
+.bar-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 26px; font-weight: 700;
+  color: var(--dark); text-align: center;
+}
+.bar-lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--mid); text-align: center;
+}
+.diff-box {
+  background: var(--accent);
+  padding: 24px 30px;
+  align-self: center;
+  color: white;
+  min-width: 220px;
+  border-radius: 14px;
+}
+.diff-lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  opacity: 0.75; margin-bottom: 4px;
+}
+.diff-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 46px; font-weight: 700;
+  line-height: 1;
+}
+.diff-stats { font-size: 13px; opacity: 0.85; margin-top: 8px; line-height: 1.65; }
+
+/* ----- S8: MEDIATION PATH ----- */
+.path-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
+
+/* ----- S9: MODERATION ----- */
+.mod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; align-content: start; }
+.mod-card {
+  padding: 32px 30px;
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  display: flex; flex-direction: column;
+}
+.mod-card.partial { border-left: 4px solid #d97706; }
+.mod-card.null    { border-left: 4px solid var(--muted); }
+.mod-hyp {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.mod-card.partial .mod-hyp { color: #b45309; }
+.mod-card.null    .mod-hyp { color: var(--muted); }
+.mod-verdict { font-family: 'Epilogue', sans-serif; font-size: 21px; font-weight: 700; color: var(--dark); margin-bottom: 14px; }
+.mod-body { font-size: 15px; line-height: 1.65; color: var(--mid); flex: 1; }
+.mod-stat { font-size: 13px; color: var(--muted); margin-top: 14px; line-height: 1.6; font-style: italic; }
+
+/* ----- S10: DISCUSSION ----- */
+.disc-list { display: flex; flex-direction: column; gap: 24px; flex: 1; justify-content: flex-start; padding-top: 20px; }
+.disc-item { display: flex; gap: 22px; align-items: flex-start; }
+.disc-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 34px; font-weight: 700;
+  color: rgba(198,25,50,0.18); line-height: 1;
+  min-width: 32px; margin-top: 2px;
+}
+
+/* ----- S11: AGENDA ----- */
+.agenda-list { display: flex; flex-direction: column; gap: 18px; flex: 1; justify-content: flex-start; padding-top: 12px; }
+.agenda-item {
+  display: flex; gap: 18px; align-items: flex-start;
+  padding: 20px 26px;
+  border-left: 2px solid var(--border);
+  background: var(--white);
+  border-radius: 0 14px 14px 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.agenda-arrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 700;
+  color: rgba(198,25,50,0.25); line-height: 1;
+  margin-top: 2px;
+}
+
+/* ----- S12: CLOSING (LIGHT HERO SPLIT) ----- */
+#s12 { flex-direction: column !important; }
+.closing-left {
+  display: flex; flex-direction: column;
+  padding: 72px 80px; width: 55%; flex-shrink: 0;
+  justify-content: center;
+}
+.closing-right {
+  flex: 1; background: var(--dark);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; position: relative;
+}
+.thanks-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 24px;
+}
+
+/* ================================================================
+   BACKUP INDICATOR
+================================================================ */
+.backup-tag {
+  position: absolute;
+  top: 0; right: 64px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  background: var(--accent); color: white;
+  padding: 4px 12px;
+  border-radius: 0 0 6px 6px;
+}
+
+/* ================================================================
+   PRESENTER NOTES
+================================================================ */
+#notes-panel {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 26%;
+  background: rgba(8,8,12,0.96);
+  padding: 18px 40px 22px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 800;
+  overflow-y: auto;
+}
+#notes-panel.open { transform: translateY(0); }
+.notes-head {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 10px;
+}
+#notes-body {
+  font-size: 14px; line-height: 1.7;
+  color: rgba(255,255,255,0.78);
+}
+#notes-body ul { padding-left: 18px; }
+#notes-body li { margin-bottom: 5px; }
+
+/* ================================================================
+   MENU
+================================================================ */
+#menu-overlay {
+  position: fixed; inset: 0;
+  background: rgba(8,8,12,0.96);
+  z-index: 900;
+  display: none;
+  padding: 56px 64px;
+  overflow-y: auto;
+}
+#menu-overlay.open { display: block; }
+.menu-title {
+  font-family: 'Epilogue', sans-serif;
+  font-size: 22px; font-weight: 700;
+  color: white; margin-bottom: 6px;
+}
+.menu-sub { font-size: 13px; color: rgba(255,255,255,0.35); margin-bottom: 36px; }
+.menu-section {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent);
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 14px; margin-top: 28px;
+}
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 8px; }
+.menu-item {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.menu-item:hover, .menu-item.cur {
+  background: rgba(198,25,50,0.18);
+  border-color: var(--accent);
+}
+.menu-item-n {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; color: rgba(255,255,255,0.3);
+  margin-bottom: 5px;
+}
+.menu-item-t {
+  font-size: 13px; color: rgba(255,255,255,0.78);
+  font-weight: 500; line-height: 1.35;
+}
+.menu-close-btn {
+  position: fixed; top: 28px; right: 48px;
+  background: none; border: none;
+  font-size: 13px; color: rgba(255,255,255,0.4);
+  cursor: pointer; letter-spacing: 0.05em;
+}
+.menu-close-btn:hover { color: white; }
+
+/* hint */
+#hint {
+  position: fixed; bottom: 18px; right: 20px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; color: rgba(255,255,255,0.18);
+  letter-spacing: 0.05em; pointer-events: none; z-index: 50;
+}
+
+/* ----- SLIDE FOOTER (author line) ----- */
+.slide-footer {
+  position: absolute;
+  bottom: 18px; left: 64px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div id="scaler">
+
+<!-- Progress -->
+<div id="progress-bar"></div>
+
+<!-- ===================================================
+     S0 — TITLE
+=================================================== -->
+<div class="slide active" id="s0"
+  data-section="" data-num=""
+  data-notes="Welcome. State name + affiliation. · This is an empirical paper examining a phenomenon that is happening right now in grocery stores worldwide. · In 15 minutes: background → theory → study → results → where to go next. · Core claim you will defend: AI pricing is perceived as less fair than human-designed pricing — and transparency is precisely why.">
+  <div style="display:flex;flex-direction:column;height:100%;padding:80px 120px 80px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <img src="Kristiania_logo_22_rod.svg" style="height:60px;width:auto;" alt="Kristiania University of Applied Sciences">
+      <div class="emac-tag">EMAC Spring Conference 2026<br>Bath, UK &nbsp;·&nbsp; June 2–5</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;max-width:1080px;">
+      <div style="width:44px;height:4px;background:var(--accent);margin-bottom:48px;border-radius:2px;"></div>
+      <div class="h1" style="font-size:66px;font-weight:900;line-height:1.05;letter-spacing:-0.03em;">Consumer Fairness Perceptions<br>of Human- vs. AI-Driven<br>Dynamic Pricing</div>
+    </div>
+    <div style="font-size:19px;color:var(--mid);font-family:'Barlow',sans-serif;line-height:1.75;">
+      Alexander F. Hem &amp; Anders Mamen<br>
+      <span style="color:var(--muted);font-size:16px;">Kristiania University of Applied Sciences &nbsp;·&nbsp; Department of Marketing and Economics</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S1 — OPENING HOOK
+=================================================== -->
+<div class="slide slide-dark" id="s1"
+  data-section="Background" data-num="02 / 13"
+  data-notes="Pause after the big line. Let it land. · The audience knows dynamic pricing exists — your job is to make them feel the question. · Emphasize: it's not about WHAT the price is. It's about WHO or WHAT decided it. · This is a real, current phenomenon: Williams (WSJ 2025), Barber (2025). Grocery stores are the frontline.">
+  <div class="topbar">
+    <div class="section-label">Background</div>
+    <div class="slide-num">02 / 13</div>
+  </div>
+  <div class="content" style="flex-direction:row;padding-right:0;padding-bottom:0;align-items:stretch;gap:0;">
+    <div class="hook-text-col">
+      <div style="border-left:4px solid var(--accent);padding-left:24px;">
+        <div class="hook-big" style="color:#fff;font-size:48px;line-height:1.15;">Prices can change up to<br><span class="accent">100 times a day.</span></div>
+        <div style="margin-top:14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.30);">Jennifer Williams &nbsp;·&nbsp; Wall Street Journal &nbsp;·&nbsp; July 2025</div>
+      </div>
+      <div class="hook-sub" style="color:rgba(255,255,255,0.6);margin-top:48px;font-size:24px;">The question isn't what price you pay.<br>It's who — or what — set it.</div>
+    </div>
+    <div class="hook-img-col">
+      <div style="position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px;padding:12px 0 0 24px;">
+
+        <!-- NYT screenshot — row 1, col 1 -->
+        <div style="position:relative;overflow:hidden;border-radius:12px;background:#000;">
+          <img src="nyt-screenshot.png" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="">
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:32px 14px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:rgba(255,255,255,.38);letter-spacing:.06em;">© The New York Times · Sara Ruberg · Oct 23 2024</div>
+          </div>
+        </div>
+
+        <!-- WSJ live-price video — row 1, col 2 -->
+        <div style="position:relative;overflow:hidden;border-radius:12px;background:#000;">
+          <video autoplay muted loop playsinline src="https://m.wsj.net/video-atmo/20250725/e61d29c6-aa41-4dcc-8850-d27b7bc43273/1/pricechange-ezgif.com-crop-video_720.mp4" style="width:100%;height:100%;object-fit:cover;"></video>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:32px 14px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:rgba(255,255,255,.38);letter-spacing:.06em;">© WSJ / Partap Sandhu · 2025</div>
+          </div>
+        </div>
+
+        <!-- CNBC screenshot — row 2, spans both cols -->
+        <div style="grid-column:1/-1;position:relative;overflow:hidden;border-radius:12px;background:#000;">
+          <img src="cnbc-screenshot.png" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="">
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:32px 14px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:rgba(255,255,255,.38);letter-spacing:.06em;">© CNBC · Kevin Williams · Mar 21 2026</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S2 — BRIDGE: TWO SYSTEMS, ONE QUESTION
+=================================================== -->
+<div class="slide" id="s2"
+  data-section="Background" data-num="03 / 13"
+  data-notes="Pivot from the phenomenon to the research question. One sentence per panel — don't linger. Left: human-designed, rule-based, monitored. You can follow the logic. Right: AI, autonomous, adapts without oversight. You can't see inside it. · Land on the research question and move directly into theory. · The 'who or what set it' from S1 resolves into two concrete, real systems. · This sets up the next question: WHY would these two systems feel different?">
+  <div class="topbar">
+    <div class="section-label">Background</div>
+    <div class="slide-num">03 / 13</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:22px;">Two systems now operating in grocery stores.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;margin-bottom:18px;">
+
+      <!-- Panel A: Human-designed -->
+      <div style="background:#F8F7F4;border-radius:14px;padding:36px 32px;display:flex;flex-direction:column;justify-content:space-between;border:1.5px solid var(--border);">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">Type A</div>
+          <div class="h3" style="font-size:24px;margin-bottom:18px;">Human-designed algorithm</div>
+          <div class="body">Rule-based. Designed and actively monitored by staff. The pricing logic is set by people — and people continue to oversee it. Price adjustments are deliberate, traceable, and subject to human review at any point.</div>
+        </div>
+        <div style="padding-top:20px;border-top:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.09em;color:var(--muted);text-transform:uppercase;">Traceable · Accountable · Interpretable</div>
+      </div>
+
+      <!-- Panel B: Self-learning AI -->
+      <div style="background:#111;border-radius:14px;padding:36px 32px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:16px;">Type B</div>
+          <div class="h3" style="font-size:24px;color:#fff;margin-bottom:18px;">Self-learning AI</div>
+          <div class="body" style="color:rgba(255,255,255,0.5);">Autonomous. Learns and updates without human oversight. Prices adapt based on complex patterns in large datasets — without anyone reviewing each individual decision. The system's internal logic is difficult to inspect or explain.</div>
+        </div>
+        <div style="padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.09em;color:rgba(255,255,255,0.22);text-transform:uppercase;">Opaque · Autonomous · Black box</div>
+      </div>
+
+    </div>
+    <div style="padding:22px 28px;background:rgba(198,25,50,0.05);border:1.5px solid rgba(198,25,50,0.22);border-radius:12px;flex-shrink:0;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Research Question</div>
+      <div class="h3" style="font-size:20px;">Does the source of a pricing algorithm change how fair the price feels — and if so, why?</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S3 — THEORY: WHY FAIRNESS DIFFERS
+=================================================== -->
+<div class="slide" id="s3"
+  data-section="Theory" data-num="04 / 13"
+  data-notes="Three steps building the theoretical case for H1 and H4. Lead with confidence — this is the intellectual core. · Pillar 1: Fairness is about HOW the price was decided, not just WHAT you pay. Procedural fairness is what this study targets — and opacity is what undermines it. · Pillar 2: The two systems differ fundamentally in how followable they are. Human-designed = you can trace the logic. Self-learning AI = prices emerge from patterns no person designed or can explain. This is the source of the fairness gap. · Pillar 3: Transparency is the formal mediating mechanism. It is not algorithm type per se that matters — it is what consumers can understand about the process. This is H4, and it is the theoretical advance of the paper.">
+  <div class="topbar">
+    <div class="section-label">Theory</div>
+    <div class="slide-num">04 / 13</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:24px;">Why the source should matter</div>
+    <div class="pillars">
+      <div class="pillar reveal-item" data-step="1">
+        <div style="font-family:'Epilogue',sans-serif;font-size:64px;font-weight:900;color:var(--accent);opacity:0.12;line-height:1;margin-bottom:16px;letter-spacing:-0.03em;">01</div>
+        <div class="h3" style="margin-bottom:10px;">Price fairness is procedural</div>
+        <div class="pillar-body">Fairness reflects not just what you pay, but how the price was decided. When the pricing process is opaque or difficult to follow, procedural unfairness dominates the consumer's evaluation — regardless of the price level itself.</div>
+        <div class="pillar-cite">Campbell (1999); Ferguson, Ellen &amp; Bearden (2014); Bolton, Warlop &amp; Alba (2003)</div>
+      </div>
+      <div class="pillar reveal-item" data-step="2">
+        <div style="font-family:'Epilogue',sans-serif;font-size:64px;font-weight:900;color:var(--accent);opacity:0.12;line-height:1;margin-bottom:16px;letter-spacing:-0.03em;">02</div>
+        <div class="h3" style="margin-bottom:10px;">Two generations of algorithms — two levels of opacity</div>
+        <div class="pillar-body">Human-designed, rule-based systems are traceable and accountable — consumers can, in principle, follow the logic. Self-learning AI adjusts prices autonomously through complex data patterns, making its workings difficult to interpret. This opacity is the source of the fairness penalty.</div>
+        <div class="pillar-cite">Calvano et al. (2019); Seele, Dierksmeier, Hofstetter &amp; Schultz (2021)</div>
+      </div>
+      <div class="pillar reveal-item" data-step="3">
+        <div style="font-family:'Epilogue',sans-serif;font-size:64px;font-weight:900;color:var(--accent);opacity:0.12;line-height:1;margin-bottom:16px;letter-spacing:-0.03em;">03</div>
+        <div class="h3" style="margin-bottom:10px;">Transparency is the mechanism</div>
+        <div class="pillar-body">When consumers cannot understand how a price was set, perceived fairness drops. It is not algorithm type per se that matters — it is what consumers can understand about it. Transparency bridges the source of the price and the judgment of its fairness.</div>
+        <div class="pillar-cite">Rothenberger (2015); procedural justice &nbsp;→&nbsp; H4</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S4MOD — THEORY: WHO FEELS IT MOST
+=================================================== -->
+<div class="slide" id="s4mod"
+  data-section="Theory" data-num="05 / 13"
+  data-notes="Two boundary conditions on who feels the human-vs-AI fairness gap most. · H2 — Technology anxiety: apprehension about complex tech leads consumers to distrust opaque AI pricing more. BUT preview honestly: the interaction is not significant (p=.492); conditional probing only hints at a mid-range effect, and we won't claim moderation. · H3 — Wastefulness: careful spenders (tightwads) are more attuned to pricing nuances and more likely to scrutinize who set the price. Spendthrifts less so. Preview: interaction not significant (p=.080); a conditional effect appears only for low-wastefulness consumers. · Neither moderator is established — present both as boundary explorations, not results. Don't over-explain — the results slide will do that.">
+  <div class="topbar">
+    <div class="section-label">Theory</div>
+    <div class="slide-num">05 / 13</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:28px;">Not all consumers feel the difference equally</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;">
+      <div class="reveal-item" data-step="1" style="background:#F8F7F4;border-radius:14px;padding:32px 28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">Moderator 1 — H2</div>
+        <div class="h3" style="font-size:20px;">Technology Anxiety</div>
+        <div class="body">Fear and apprehension about computer technology. Consumers high in tech anxiety are less confident in complex data-driven systems and more likely to perceive autonomous AI pricing as opaque and potentially manipulative — amplifying the fairness gap.</div>
+        <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">H2</div>
+          <div class="small">Tech anxiety amplifies the fairness advantage of human-designed pricing over AI.</div>
+          <div class="pillar-cite" style="margin-top:8px;">Meuter et al. (2003, 2005) · Kang, Kim &amp; Lakshmanan (2024)</div>
+        </div>
+      </div>
+      <div class="reveal-item" data-step="2" style="background:#F8F7F4;border-radius:14px;padding:32px 28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">Moderator 2 — H3</div>
+        <div class="h3" style="font-size:20px;">Wastefulness with Money</div>
+        <div class="body">Consumers who are careful with money — tightwads — are more attuned to how prices are set. They are more likely to scrutinize who or what decided the price. Spendthrifts, less focused on cost implications, are less sensitive to the pricing mechanism.</div>
+        <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">H3</div>
+          <div class="small">Wastefulness reduces the fairness advantage of human-designed pricing over AI.</div>
+          <div class="pillar-cite" style="margin-top:8px;">Rick, Cryder &amp; Loewenstein (2008)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S4 — CONCEPTUAL MODEL  (06 / 13)
+=================================================== -->
+<div class="slide" id="s4"
+  data-section="Theory" data-num="06 / 13"
+  data-notes="Walk through slowly — give the audience time to read the diagram. · H1: the direct effect (does human = fairer?). · H4: transparency mediates the H1 relationship — this is your theoretical advance. · H2: technology anxiety moderates the main effect (amplifies it). · H3: wastefulness with money moderates the main effect (attenuates it for high spenders). · You test all four. Two will be clean. Two will be nuanced. You'll own all of them.">
+  <div class="topbar">
+    <div class="section-label">Theory</div>
+    <div class="slide-num">06 / 13</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:32px;">Conceptual framework</div>
+    <div class="path-wrap" style="display:flex;justify-content:center;align-items:center;">
+      <img src="conceptual_model.svg" style="max-width:100%;max-height:480px;display:block;" alt="Conceptual model">
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S6 — METHODS: DESIGN & MEASURES
+=================================================== -->
+<div class="slide" id="s6"
+  data-section="Methods" data-num="07 / 13"
+  data-notes="Keep this tight — academic audience, they know experiments. Key points: (1) Between-subjects: ONE manipulation — human oversight vs. autonomous AI. Both conditions describe algorithmic pricing. (2) N=601, US Prolific, pre-registered. (3) Manipulation check passed — no differential leakage. (4) Name the four constructs — don't read them. Analysis: Welch t-test (H1), PROCESS Model 1 (H2, H3), PROCESS Model 4 (H4).">
+  <div class="topbar">
+    <div class="section-label">Methods</div>
+    <div class="slide-num">07 / 13</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:16px;">Study design &amp; measures</div>
+
+    <!-- Design overview strip -->
+    <div style="display:flex;align-items:center;gap:0;background:#F8F7F4;border:1.5px solid var(--border);border-radius:12px;padding:14px 32px;margin-bottom:20px;flex-shrink:0;">
+      <div style="flex:1;font-size:16px;line-height:1.65;color:var(--mid);padding-right:32px;">Participants read a scenario set in a grocery store with electronic shelf labels enabling real-time price updates. The sole manipulation was the source of the pricing algorithm: <strong>human-designed and monitored by staff</strong> vs. <strong>autonomous AI with no human oversight</strong>.</div>
+      <div style="width:1px;height:38px;background:var(--border);margin-right:28px;flex-shrink:0;"></div>
+      <div style="text-align:center;padding-right:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:700;color:var(--dark);line-height:1;">601</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:3px;">Participants</div>
+      </div>
+      <div style="width:1px;height:38px;background:var(--border);margin-right:28px;flex-shrink:0;"></div>
+      <div style="text-align:center;padding-right:28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:700;color:var(--dark);line-height:1;">2</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:3px;">Between-subjects</div>
+      </div>
+      <div style="width:1px;height:38px;background:var(--border);margin-right:28px;flex-shrink:0;"></div>
+      <div style="text-align:center;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:700;color:var(--dark);line-height:1;">US</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:3px;">Prolific · Pre-registered</div>
+      </div>
+    </div>
+
+    <!-- Experimental conditions -->
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Experimental Conditions</div>
+    <div class="condition-grid" style="margin-bottom:18px;">
+
+      <!-- Human condition — light -->
+      <div style="background:#F8F7F4;border-radius:14px;padding:24px 28px;display:flex;flex-direction:column;justify-content:space-between;border:1.5px solid var(--border);">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Human Condition · n = 304</div>
+          <div class="h3" style="font-size:19px;margin-bottom:10px;">Human-designed algorithm</div>
+          <div class="body" style="font-size:16px;">Prices set by an algorithm <strong>designed by humans</strong> and <strong>actively monitored</strong> by the store's pricing team. Human staff review and update the system when needed.</div>
+        </div>
+        <div style="padding-top:12px;margin-top:12px;border-top:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.09em;color:var(--muted);text-transform:uppercase;">Rule-based · Supervised · Traceable</div>
+      </div>
+
+      <!-- AI condition — dark -->
+      <div style="background:#111;border-radius:14px;padding:24px 28px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:10px;">AI Condition · n = 297</div>
+          <div class="h3" style="font-size:19px;color:#fff;margin-bottom:10px;">Self-learning AI</div>
+          <div class="body" style="font-size:16px;color:rgba(255,255,255,0.5);">Prices set by an <strong style="color:rgba(255,255,255,0.75);">AI algorithm</strong> that <strong style="color:rgba(255,255,255,0.75);">learns and updates itself without human monitoring</strong>. The system adapts its pricing approach independently over time.</div>
+        </div>
+        <div style="padding-top:12px;margin-top:12px;border-top:1px solid rgba(255,255,255,0.08);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.09em;color:rgba(255,255,255,0.22);text-transform:uppercase;">Autonomous · Unsupervised · Opaque</div>
+      </div>
+
+    </div>
+
+    <!-- Measures -->
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Measures</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div class="card card-accent" style="padding:14px 16px;">
+        <div class="card-label card-label-accent">Dependent Variable</div>
+        <div class="h4">Price Fairness</div>
+        <div class="small">4 items · 7-pt · α = .98<br>Habel et al. (2016)</div>
+      </div>
+      <div class="card card-accent" style="padding:14px 16px;">
+        <div class="card-label card-label-accent">Mediator — H4</div>
+        <div class="h4">Transparency</div>
+        <div class="small">4 items · 7-pt · α = .89<br>Rothenberger (2015)</div>
+      </div>
+      <div class="card card-accent" style="padding:14px 16px;">
+        <div class="card-label card-label-accent">Moderator — H2</div>
+        <div class="h4">Tech Anxiety</div>
+        <div class="small">4 items · 7-pt · α = .79<br>Meuter et al. (2005)</div>
+      </div>
+      <div class="card card-accent" style="padding:14px 16px;">
+        <div class="card-label card-label-accent">Moderator — H3</div>
+        <div class="h4">Wastefulness</div>
+        <div class="small">4 items · 7-pt · α = .72<br>Rick et al. (2008)</div>
+      </div>
+    </div>
+    <div class="caption">Manipulation check: χ²(1, 601) = 1.52, p = .218 (no differential leakage)</div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S7 — RESULTS: H1 MAIN EFFECT
+=================================================== -->
+<div class="slide" id="s7"
+  data-section="Results" data-num="08 / 13"
+  data-notes="Strongest result. Let the bars load before speaking. · 'Human pricing is rated significantly fairer than AI pricing.' · Mean difference = −0.318 on a 7-pt scale. p = .034. · Sensitivity: effect strengthens when restricted to participants who passed the manipulation check (Δ = −0.417, p = .033). The finding is robust.">
+  <div class="topbar">
+    <div class="section-label">Results</div>
+    <div class="slide-num">08 / 13</div>
+  </div>
+  <div class="content" style="display:flex;flex-direction:column;">
+    <div class="rule"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:28px;flex-shrink:0;">
+      <div class="h2">Human pricing is perceived as fairer</div>
+      <span class="tag tag-yes">H1 Supported</span>
+    </div>
+
+    <!-- Raincloud + hero stat -->
+    <div style="flex:1;display:flex;align-items:stretch;justify-content:center;min-height:0;gap:16px;overflow:hidden;">
+
+      <!-- Raincloud plot -->
+      <div style="align-self:stretch;aspect-ratio:6.5/4.8;position:relative;min-width:0;overflow:hidden;">
+        <img src="h1-raincloud.svg" style="position:absolute;inset:0;width:100%;height:100%;" alt="Raincloud plot: perceived price fairness by condition">
+      </div>
+
+      <!-- Hero stat -->
+      <div style="flex:1;min-width:220px;max-width:300px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Mean Difference</div>
+        <div style="font-family:'Epilogue',sans-serif;font-size:64px;font-weight:900;color:var(--accent);line-height:1;letter-spacing:-0.02em;">−0.318</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--mid);margin-top:14px;line-height:1.4;">p = .034 · 95% CI [−0.612, −0.024]</div>
+      </div>
+
+    </div>
+
+    <!-- Bottom stat line -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,0.08);margin-top:18px;flex-shrink:0;">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">N = 601 · 7-point scale</span>
+      <span style="display:inline-block;width:1px;height:11px;background:rgba(0,0,0,0.18);"></span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">Sensitivity (manipulation check): Δ = −0.417, 95% CI [−0.800, −0.035], p = .033 ✓</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S8 — RESULTS: H4 MEDIATION
+=================================================== -->
+<div class="slide" id="s8"
+  data-section="Results" data-num="09 / 13"
+  data-notes="This is your theoretical contribution — the mechanism. · AI pricing is perceived as LESS TRANSPARENT. That opacity explains the fairness penalty. · Algorithm → Transparency: b = −0.219, p = .042. AI is seen as harder to understand. · Transparency → Fairness: b = 0.783, very strong. Transparency is a powerful predictor of fairness. · Indirect effect: bootstrapped CI [−0.342, −0.006] — does not include zero. Mediation confirmed. PROCESS Model 4. · Managerial takeaway follows directly: make AI pricing legible → close the fairness gap.">
+  <div class="topbar">
+    <div class="section-label">Results</div>
+    <div class="slide-num">09 / 13</div>
+  </div>
+  <div class="content" style="display:flex;flex-direction:column;">
+    <div class="rule"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:28px;flex-shrink:0;">
+      <div class="h2">H4: Transparency mediates the fairness gap</div>
+      <span class="tag tag-yes">Supported</span>
+    </div>
+
+    <!-- Diagram + hero stat -->
+    <div style="flex:1;display:flex;align-items:stretch;justify-content:center;min-height:0;gap:16px;overflow:hidden;">
+
+      <!-- Mediation diagram -->
+      <div style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <img src="mediation.svg" style="max-width:100%;max-height:100%;width:auto;height:auto;display:block;" alt="Mediation path diagram: Algorithm type → Perceived Transparency → Price Fairness Perceptions">
+      </div>
+
+      <!-- Hero stat -->
+      <div style="flex:0 0 240px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border-left:1px solid rgba(0,0,0,0.08);padding-left:24px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Indirect Effect</div>
+        <div style="font-family:'Epilogue',sans-serif;font-size:64px;font-weight:900;color:var(--accent);line-height:1;letter-spacing:-0.02em;">−0.171</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--mid);margin-top:14px;line-height:1.5;">95% CI [−0.342, −0.006]</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:var(--accent);margin-top:22px;letter-spacing:.01em;">→ Indirect-only mediation</div>
+      </div>
+
+    </div>
+
+    <!-- Bottom stat line -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,0.08);margin-top:18px;flex-shrink:0;">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">N = 601 · 7-point scale</span>
+      <span style="display:inline-block;width:1px;height:11px;background:rgba(0,0,0,0.18);"></span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">PROCESS Model 4 · Bootstrap CI (10,000 samples)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S9 — RESULTS: H2 & H3 MODERATION
+=================================================== -->
+<div class="slide" id="s9"
+  data-section="Results" data-num="10 / 13"
+  data-notes="Present both moderators honestly and symmetrically — neither interaction is significant, so we claim moderation for neither. · H2 — Technology Anxiety: interaction b=−0.09, p=.492 (not significant). A Johnson-Neyman probe flags a mid-range band (2.53–3.88) where the conditional effect is distinguishable from zero — but be careful: in PROCESS Model 1 the conditional effect is LINEAR, and here it is monotonic, actually largest at high anxiety (≈−0.68 at the top of the scale), where it is simply estimated too imprecisely (the CI balloons) to reach significance. The mid-range 'region' is where the data are densest and SEs smallest — NOT a substantive collapse at high anxiety. Do not narrate cognitive overload erasing the effect; the floodlight shows a straight descending line. · H3 — Wastefulness: interaction p=.080 (not significant), but closer to threshold than H2. The conditional effect at low wastefulness is significant (b=−0.63, p=.025) — price-attentive consumers show the larger gap. · The honest line: neither interaction reached significance; the conditional probes are suggestive only; if anything the evidence is stronger for wastefulness than for anxiety. Candor here is part of the contribution. · Theory note for H3 if asked: wastefulness is about cost-sensitivity (distributive), whereas our mechanism is procedural transparency (H4) — a plausible reason it doesn't bite.">
+  <div class="topbar">
+    <div class="section-label">Results</div>
+    <div class="slide-num">10 / 13</div>
+  </div>
+  <div class="content" style="display:flex;flex-direction:column;">
+    <div class="rule"></div>
+    <div style="margin-bottom:22px;flex-shrink:0;">
+      <div class="h2">H2 &amp; H3: Moderation — an honest read</div>
+    </div>
+
+    <div class="mod-grid" style="flex:1;align-content:center;">
+
+      <div class="mod-card partial">
+        <div class="mod-hyp">H2 — Technology Anxiety &nbsp;·&nbsp; <span class="tag tag-part">Moderation not established</span></div>
+        <div class="mod-verdict">A conditional pattern — but no reliable moderation</div>
+        <div class="mod-body">The interaction is nonsignificant (b = −0.09, p = .492). A Johnson–Neyman probe flags a mid-range band (2.53–3.88) where the AI penalty is distinguishable from zero — but the conditional effect is <strong>monotonic</strong>, in fact largest at high anxiety. The band reflects where estimates are most precise, not a substantive cutoff.</div>
+        <div class="mod-stat">We report the band descriptively and do not claim that technology anxiety moderates the effect.</div>
+      </div>
+
+      <div class="mod-card partial">
+        <div class="mod-hyp">H3 — Wastefulness with Money &nbsp;·&nbsp; <span class="tag tag-part">Moderation not established</span></div>
+        <div class="mod-verdict">A conditional pattern — but no reliable moderation</div>
+        <div class="mod-body">The interaction is nonsignificant (p = .080) — though closer to threshold than H2. A conditional effect emerges for <strong>low-wastefulness</strong> consumers (b = −0.63, p = .025), the price-attentive group, but the interaction does not clear conventional thresholds.</div>
+        <div class="mod-stat">On the interaction evidence, wastefulness is the <em>stronger</em> of the two candidates — the reverse of the original grading. We claim neither.</div>
+      </div>
+
+    </div>
+
+    <!-- Bottom stat line -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,0.08);margin-top:18px;flex-shrink:0;">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">N = 601 · 7-point scale</span>
+      <span style="display:inline-block;width:1px;height:11px;background:rgba(0,0,0,0.18);"></span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">PROCESS Model 1 · Johnson–Neyman technique · Floodlight plot available on request</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S10 — DISCUSSION
+=================================================== -->
+<div class="slide" id="s10"
+  data-section="Discussion" data-num="11 / 13"
+  data-notes="Connect findings back to the theory. The story is coherent. · Point 1: procedural fairness theory confirmed — it's the HOW (opacity) not the WHAT (price level) that drives the penalty. · Point 2: the mediation is the theoretical contribution. Prior work demonstrates fairness effects; we identify the mechanism. Transparency is how algorithm type gets translated into fairness judgments. · Point 3: this is a theoretical advance over Duani et al. (2024). We don't just show an effect — we show the pathway. That is the contribution.">
+  <div class="topbar">
+    <div class="section-label">Discussion</div>
+    <div class="slide-num">11 / 13</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:28px;">What the results tell us</div>
+    <div style="display:flex;flex:1;gap:24px;align-items:stretch;min-height:0;">
+      <div style="flex:1;display:flex;flex-direction:column;background:var(--white);border-radius:14px;padding:36px 32px;border-top:3px solid var(--accent);box-shadow:0 2px 12px rgba(0,0,0,0.05);">
+        <div style="font-family:'Epilogue',sans-serif;font-size:64px;font-weight:900;color:var(--accent);opacity:0.12;line-height:1;margin-bottom:20px;letter-spacing:-0.03em;">01</div>
+        <div class="h4" style="margin-bottom:14px;">AI pricing is less fair — because it is less interpretable</div>
+        <div style="font-size:15px;color:var(--mid);line-height:1.65;">The fairness penalty is not about the price level — it is procedural. AI systems are perceived as harder to understand, and that opacity drives the unfairness judgment. This is exactly what procedural justice theory predicts.</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;background:var(--white);border-radius:14px;padding:36px 32px;border-top:3px solid var(--accent);box-shadow:0 2px 12px rgba(0,0,0,0.05);">
+        <div style="font-family:'Epilogue',sans-serif;font-size:64px;font-weight:900;color:var(--accent);opacity:0.12;line-height:1;margin-bottom:20px;letter-spacing:-0.03em;">02</div>
+        <div class="h4" style="margin-bottom:14px;">Transparency is the mechanism — and the theoretical contribution</div>
+        <div style="font-size:15px;color:var(--mid);line-height:1.65;">The mediation finding extends procedural justice theory to algorithmic pricing: it is not the algorithm type per se that drives unfairness, but what consumers can understand about it. Prior work shows effects; this study identifies the pathway.</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;background:var(--white);border-radius:14px;padding:36px 32px;border-top:3px solid var(--accent);box-shadow:0 2px 12px rgba(0,0,0,0.05);">
+        <div style="font-family:'Epilogue',sans-serif;font-size:64px;font-weight:900;color:var(--accent);opacity:0.12;line-height:1;margin-bottom:20px;letter-spacing:-0.03em;">03</div>
+        <div class="h4" style="margin-bottom:14px;">Individual differences: a boundary, not yet established</div>
+        <div style="font-size:15px;color:var(--mid);line-height:1.65;">Neither moderator's interaction reached significance — technology anxiety (p = .492) or wastefulness (p = .080). Conditional probes hint the gap is sharper for the most price-attentive consumers, but we treat both as boundary explorations for future work, not as established effects.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S11 — MANAGERIAL IMPLICATIONS
+=================================================== -->
+<div class="slide" id="s11"
+  data-section="Implications" data-num="12 / 13"
+  data-notes="The practical payoff — pitch this directly to the pricing track. · The mechanism IS the lever: because the fairness penalty is procedural (driven by opacity, not the price level), transparency interventions target the actual cause rather than working around it. · Concrete cues: plain-language 'why this price' explanations, price-history displays, QR codes on the shelf label linking to the reasoning behind an adjustment. The goal is comprehension, not algorithmic detail. · Be honest about the ceiling: machine-learning pricing models are partial black boxes — full interpretability may be infeasible. Signaling human oversight, or a hybrid human-AI framing, can convey accountability where full disclosure cannot. · Targeting: the fairness gap is sharpest among shoppers with moderate technology anxiety and low wastefulness — the most price-attentive segments.">
+  <div class="topbar">
+    <div class="section-label">Implications</div>
+    <div class="slide-num">12 / 13</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:12px;">What this means for retailers</div>
+    <div class="body" style="margin-bottom:26px;max-width:1080px;">If transparency is the mechanism, transparency is also the lever. Retailers can't easily change that AI <em>feels</em> less fair — but they can change how legible the pricing process is.</div>
+    <div style="display:flex;flex:1;gap:24px;align-items:stretch;min-height:0;">
+
+      <div class="card card-accent" style="flex:1;display:flex;flex-direction:column;">
+        <div class="card-label card-label-accent">The lever</div>
+        <div class="h4" style="margin-bottom:12px;">Make the pricing process legible</div>
+        <div style="font-size:15px;color:var(--mid);line-height:1.65;">The penalty is procedural — it comes from opacity, not the price level. Clear explanations and transparency cues on digital shelf labels target the actual cause. A simple "why this price" rationale can recover perceived fairness for AI-set prices.</div>
+      </div>
+
+      <div class="card card-accent" style="flex:1;display:flex;flex-direction:column;">
+        <div class="card-label card-label-accent">In practice</div>
+        <div class="h4" style="margin-bottom:12px;">Design the cue, not just the system</div>
+        <div style="font-size:15px;color:var(--mid);line-height:1.65;">Plain-language pricing explanations, price-history displays, and QR codes linking to the logic behind an adjustment. What closes the gap is consumer comprehension — not exposing the algorithm's technical detail.</div>
+      </div>
+
+      <div class="card card-accent" style="flex:1;display:flex;flex-direction:column;">
+        <div class="card-label card-label-accent">The limit</div>
+        <div class="h4" style="margin-bottom:12px;">Transparency has a ceiling</div>
+        <div style="font-size:15px;color:var(--mid);line-height:1.65;">Machine-learning pricing models are partial black boxes; full interpretability may be infeasible. Signaling human oversight — or a hybrid human-AI framing — can convey accountability where complete disclosure cannot.</div>
+      </div>
+
+    </div>
+    <div style="margin-top:22px;padding:16px 28px;background:#F8F7F4;border:1.5px solid var(--border);border-radius:12px;flex-shrink:0;display:flex;align-items:baseline;gap:16px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);flex-shrink:0;">Who to prioritize</div>
+      <div class="small" style="color:var(--mid);">The fairness gap is sharpest among shoppers with <strong>moderate technology anxiety</strong> and <strong>low wastefulness</strong> — the most price- and process-attentive segments.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     Sb9 — RESEARCH AGENDA  (Backup B9)
+=================================================== -->
+<div class="slide" id="sb9"
+  data-section="Q&A" data-num="B9"
+  data-notes="Pitch these as motivated next steps — not hedges. · The hybrid condition directly addresses reviewer feedback and is the most obvious follow-up study. · Cross-cultural replication: European sample is particularly motivated — EU AI Act creates a different regulatory context for algorithmic transparency. · Behavioral DVs: stated fairness → actual purchase behavior, store switching. · Transparency interventions: if transparency is the mechanism, what specific disclosures work? QR codes? Shelf label explanations? Test it.">
+  <div class="backup-tag">Backup — Q&amp;A</div>
+  <div class="topbar">
+    <div class="section-label">Q&amp;A Backup</div>
+    <div class="slide-num">B9</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:22px;">Where this research goes next</div>
+    <div class="agenda-list">
+      <div class="agenda-item">
+        <div class="agenda-arrow">→</div>
+        <div>
+          <div class="h4">Hybrid pricing — a 2×2 design</div>
+          <div class="small">Our conditions bundle two factors: logic source and human oversight. A 2×2 (human-designed vs. AI-derived × monitored vs. autonomous), with transparency as mediator, un-confounds them — and tests whether a human-in-the-loop signal alone restores fairness over an AI black box.</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-arrow">→</div>
+        <div>
+          <div class="h4">Cross-cultural replication</div>
+          <div class="small">The US sample is a starting point. EU consumers face a distinct regulatory context (AI Act, right to explanation). Algorithmic trust varies substantially across cultures and regulatory environments.</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-arrow">→</div>
+        <div>
+          <div class="h4">Behavioral consequences</div>
+          <div class="small">Perceived unfairness should predict store switching, reduced purchase likelihood, and negative word-of-mouth. Moving from perception to behavior is the field's essential next step.</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-arrow">→</div>
+        <div>
+          <div class="h4">Transparency interventions</div>
+          <div class="small">If transparency is the mechanism, what specific disclosures close the fairness gap? Price history displays, QR explanations, shelf label reasoning — empirically testing what works has direct retailer value.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     S12 — THANK YOU
+=================================================== -->
+<div class="slide slide-dark" id="s12"
+  data-section="" data-num="13 / 13"
+  data-notes="Land the key message slowly. Pause after the first line. · Then: 'Perceived transparency is not just a mediator — it is the mechanism that connects algorithm type to fairness judgments. Identifying that pathway is the theoretical contribution of this paper.' · Invite questions. Backup slides are ready. Navigate with M to jump to any Q&A slide.">
+  <div class="topbar" style="border-bottom-color:rgba(255,255,255,0.08);">
+    <div class="section-label" style="color:rgba(255,255,255,0.35);">EMAC 2026</div>
+    <div class="slide-num" style="color:rgba(255,255,255,0.3);">13 / 13</div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;padding:0 120px 56px;">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="thanks-label" style="color:var(--accent);">Key Takeaway</div>
+      <div style="width:36px;height:3px;background:var(--accent);margin:16px 0 36px;"></div>
+      <div style="font-family:'Epilogue',sans-serif;font-size:52px;font-weight:900;color:#ffffff;line-height:1.1;max-width:900px;">AI pricing feels unfair because it feels like a black box.</div>
+      <div style="font-size:20px;color:rgba(255,255,255,0.5);margin-top:24px;max-width:700px;line-height:1.55;">Transparency is the mechanism. Opacity is why the fairness penalty exists.</div>
+    </div>
+    <div style="flex-shrink:0;">
+      <div style="font-size:14px;color:rgba(255,255,255,0.3);line-height:1.9;">
+        Alexander F. Hem &amp; Anders Mamen &nbsp;·&nbsp; Kristiania University of Applied Sciences<br>
+        EMAC Spring Conference 2026 &nbsp;·&nbsp; Bath, UK &nbsp;·&nbsp; June 2–5
+      </div>
+      <div style="margin-top:8px;font-size:14px;color:rgba(255,255,255,0.18);">Thank you. Questions welcome.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     BACKUP SLIDES
+=================================================== -->
+
+<!-- B1: AI Definition -->
+<div class="slide" id="sb1"
+  data-section="Q&A" data-num="B1"
+  data-notes="For: 'What exactly do you mean by AI pricing? ML can be rule-based too.' · The operationalized distinction is human oversight vs. autonomous adaptation. Both conditions are algorithmic — the axis is monitored/rule-based vs. self-learning/unsupervised. · Consumer perception of this distinction is precisely what drives the fairness effect. Consumers don't need to understand the technical difference — they experience it as opacity. · This motivates the three-condition follow-up: human / hybrid / fully autonomous.">
+  <div class="backup-tag">Backup — Q&amp;A</div>
+  <div class="topbar">
+    <div class="section-label">Q&amp;A Backup</div>
+    <div class="slide-num">B1</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:20px;">What "AI pricing" meant operationally</div>
+    <div class="condition-grid" style="margin-bottom:18px;">
+      <div class="cond-box">
+        <div class="cond-type">Human Condition — Full Stimulus Text</div>
+        <div class="small" style="margin-top:4px;line-height:1.7;">Many grocery stores are shifting toward digital shelf labels that allow prices to be updated electronically. Prices for individual products can be updated several times per day in response to supplier costs, inventory levels, shopper demand, competition, and promotions.<br><br><strong>How the pricing algorithm works:</strong> Prices are set by an algorithm <em>designed by humans</em> and <em>actively monitored</em> by the store's pricing team. Human staff follow the system's performance and make updates or improvements when needed.</div>
+      </div>
+      <div class="cond-box ai">
+        <div class="cond-type">AI Condition — Full Stimulus Text</div>
+        <div class="small" style="margin-top:4px;line-height:1.7;">[Identical context paragraph]<br><br><strong>How the pricing algorithm works:</strong> Prices are set by an algorithm developed by <em>artificial intelligence (AI)</em>, which <em>learns and updates itself without human monitoring</em>. The system adapts its pricing approach independently over time.</div>
+      </div>
+    </div>
+    <div class="card card-muted" style="flex-shrink:0;">
+      <div class="card-label" style="margin-bottom:8px;">→ The operationalized axis</div>
+      <div class="small">Human oversight + rule-based vs. autonomous + self-learning. Both are "algorithmic." Consumer perception of this distinction — not the technical classification — is what drives the fairness effect. This motivates a three-condition follow-up: human / hybrid / fully autonomous AI.</div>
+    </div>
+  </div>
+</div>
+
+<!-- B2: p = .080 -->
+<div class="slide" id="sb2"
+  data-section="Q&A" data-num="B2"
+  data-notes="For: 'Your p-value for wastefulness is 0.08 — isn't that marginally significant?' · No. p = .080 is not significant at α = .05. We don't treat it as such. · The conditional effect for low-wastefulness participants (b = −0.63, p = .025) is notable — but that's not the same as a supported moderation hypothesis. The moderation test is the interaction term, not the simple slope at one level. · We're being rigorous. This is a finding that warrants a better-powered follow-up study.">
+  <div class="backup-tag">Backup — Q&amp;A</div>
+  <div class="topbar">
+    <div class="section-label">Q&amp;A Backup</div>
+    <div class="slide-num">B2</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:22px;">On p = .080 for H3 (Wastefulness)</div>
+    <div class="grid-2" style="flex:1;align-content:start;gap:20px;">
+      <div class="card card-muted">
+        <div class="h3" style="margin-bottom:10px;">Why we don't claim support</div>
+        <div class="small">The conventional α = .05 threshold exists precisely to limit Type I errors. p = .080 does not constitute reliable evidence of moderation. Reporting it as "marginally significant" would overstate the finding — reviewers correctly flagged this risk.</div>
+      </div>
+      <div class="card card-accent">
+        <div class="h3" style="margin-bottom:10px;">What the conditional effects show</div>
+        <div class="small">Low-wastefulness consumers: b = −0.63, p = .025. The effect is real for price-sensitive consumers — but the interaction term (the correct test for moderation) does not support H3. We report both without conflating them.</div>
+      </div>
+      <div class="card card-muted" style="grid-column:1/-1;">
+        <div class="card-label" style="margin-bottom:8px;">→ Implication</div>
+        <div class="small">The finding motivates a better-powered follow-up with a larger sample and sharper operationalization of the wastefulness / immediate-reward-seeking distinction flagged by reviewers.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- B3: Johnson-Neyman -->
+<div class="slide" id="sb3"
+  data-section="Q&A" data-num="B3"
+  data-notes="For: 'Your probing looks inconsistent — Johnson-Neyman for H2 but simple slopes for H3.' · Fair challenge, and we own it. Both interactions are nonsignificant (H2 p=.492; H3 p=.080), so neither establishes moderation — and the wastefulness interaction is actually closer to threshold than the anxiety one. · The conditional probes (JN for H2, simple slopes for H3) are descriptive: they show WHERE a conditional effect is distinguishable from zero, not that the moderator changes the effect. · The H2 JN band is precision-bounded — the conditional effect is monotonic, largest at high anxiety, so the band marks where SEs are smallest, not a real cutoff. · We claim moderation for neither, and future work should apply one pre-registered probing rule uniformly across moderators and power for the interaction term itself.">
+  <div class="backup-tag">Backup — Q&amp;A</div>
+  <div class="topbar">
+    <div class="section-label">Q&amp;A Backup</div>
+    <div class="slide-num">B3</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:22px;">Probing the moderators: consistency across H2 and H3</div>
+    <div style="display:flex;flex-direction:column;gap:18px;flex:1;">
+      <div class="card card-accent" style="flex:1;">
+        <div class="h3" style="margin-bottom:10px;">Both interactions are nonsignificant</div>
+        <div class="small">Technology anxiety (p = .492) and wastefulness (p = .080) both fail to reach significance — so neither establishes moderation. On the interaction evidence, wastefulness is in fact the <em>closer</em> of the two. We were inconsistent to grade them differently, and we now report both symmetrically: suggestive, not supported.</div>
+      </div>
+      <div class="card card-muted" style="flex:1;">
+        <div class="h3" style="margin-bottom:10px;">What the conditional probes do — and don't — show</div>
+        <div class="small">Johnson–Neyman (H2) and simple slopes (H3) describe <em>where</em> a conditional effect is distinguishable from zero; they are not tests of moderation. The H2 JN band (2.53–3.88) is precision-bounded — the effect is monotonic, largest at high anxiety, so the band marks where standard errors are smallest, not a real cutoff. The H3 effect is significant only at low wastefulness.</div>
+      </div>
+      <div class="card card-muted" style="flex:0 0 auto;">
+        <div class="card-label" style="margin-bottom:8px;">→ Implication</div>
+        <div class="small">Future work should pre-register one probing rule applied uniformly across moderators, and power the design for the interaction term itself rather than the conditional slopes.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- B4: External Validity -->
+<div class="slide" id="sb5"
+  data-section="Q&A" data-num="B5"
+  data-notes="For: 'US online sample with a hypothetical scenario — how generalizable is this?' · The experimental design establishes internal validity (causal inference is sound). External validity is a legitimate limitation. · The US sample is defensible: DSL adoption is highest in the US and Europe; the phenomenon is real and current. · The next step: field experiment with real purchase behavior, European sample, EU regulatory context.">
+  <div class="backup-tag">Backup — Q&amp;A</div>
+  <div class="topbar">
+    <div class="section-label">Q&amp;A Backup</div>
+    <div class="slide-num">B5</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:20px;">External validity — what we can and cannot claim</div>
+    <div class="grid-2" style="flex:1;">
+      <div class="card card-accent">
+        <div class="h3" style="margin-bottom:10px;">What the design supports</div>
+        <div class="small">The experiment establishes a causal relationship: perception of AI vs. human pricing causally affects fairness judgments, with transparency as the mechanism. The internal validity of the causal inference is sound.</div>
+      </div>
+      <div class="card card-muted">
+        <div class="h3" style="margin-bottom:10px;">Known constraints</div>
+        <div class="small">US-centric sample · Hypothetical scenario (no real purchase) · Self-reported fairness, not behavioral outcomes (store switching, purchase likelihood) · Single retail format (grocery DSL)</div>
+      </div>
+      <div class="card card-muted">
+        <div class="h3" style="margin-bottom:10px;">Why the US sample is defensible</div>
+        <div class="small">Digital shelf label adoption is highest in the US and Northern Europe. US consumers are actively encountering real-time algorithmic pricing. The scenario reflects current retail practice, not a hypothetical future.</div>
+      </div>
+      <div class="card card-accent">
+        <div class="h3" style="margin-bottom:10px;">The motivated next step</div>
+        <div class="small">European sample (EU AI Act context, right to explanation) · Real purchase behavior as DV · Field experiment in a live DSL retail environment. These are the studies that establish generalizability.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- B5: Hybrid Systems -->
+<div class="slide" id="sb6"
+  data-section="Q&A" data-num="B6"
+  data-notes="For: 'What about hybrid human-AI pricing?' OR the sharper version: 'Isn't your human condition already a hybrid?' · Concede the structure confidently — don't defend, decompose. Our two conditions vary two things at once: logic source (human-written rules vs. AI-derived patterns) AND oversight (monitored vs. autonomous). So 'human' = designed + supervised; 'AI' = AI-derived + autonomous. The hybrid — AI logic + human oversight — is the cell we didn't test. · Don't pitch a vague three-way comparison. Pitch a 2×2: logic source × oversight, with transparency as the measured mediator. It un-confounds the two factors and isolates which facet of transparency carries the effect — legible logic, or human accountability. · Managerial punchline: if the accountability signal alone restores fairness, retailers don't need an interpretable algorithm — just a credible human-in-the-loop. That's the decisive, publishable next study, and naming the confound ourselves reads as rigor, not weakness.">
+  <div class="backup-tag">Backup — Q&amp;A</div>
+  <div class="topbar">
+    <div class="section-label">Q&amp;A Backup</div>
+    <div class="slide-num">B6</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:22px;">Hybrid pricing — and why the next study is a 2×2</div>
+    <div style="display:flex;flex-direction:column;gap:18px;flex:1;justify-content:center;">
+      <div class="card card-muted">
+        <div class="h3" style="margin-bottom:10px;">What our two conditions actually varied</div>
+        <div class="small">Our conditions differ on <em>two</em> things at once: who designs the pricing logic (human rules vs. AI-derived patterns) and whether a human stays in the loop (monitored vs. autonomous). So "human" is really designed + supervised, and "AI" is AI-derived + autonomous. A hybrid — AI logic with human oversight — is the cell we did not test.</div>
+      </div>
+      <div class="card card-accent">
+        <div class="h3" style="margin-bottom:10px;">The decisive next study: a 2×2</div>
+        <div class="small">Cross <strong>logic source</strong> (human-designed vs. AI-derived) with <strong>oversight</strong> (monitored vs. autonomous), measuring transparency as the mediator. This un-confounds the two factors and isolates which facet of transparency drives fairness: being able to follow the logic, or knowing a human is accountable.</div>
+      </div>
+      <div class="card card-muted">
+        <div class="card-label" style="margin-bottom:8px;">→ Why it matters</div>
+        <div class="small">If a credible human-in-the-loop signal alone restores fairness — even over an opaque AI — retailers could close the gap without making the algorithm itself interpretable. That is a far lighter intervention than full explainability, and it is the practical question the 2×2 is built to answer.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- B6: Scale Details -->
+<div class="slide" id="sb7"
+  data-section="Q&A" data-num="B7"
+  data-notes="For: 'What scales did you use? How many items? Reliability?' · Have this ready if asked about measurement quality. Full scale items and reliability coefficients (Cronbach's α) are in the supplementary materials.">
+  <div class="backup-tag">Backup — Q&amp;A</div>
+  <div class="topbar">
+    <div class="section-label">Q&amp;A Backup</div>
+    <div class="slide-num">B7</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:20px;">Measurement details</div>
+    <div class="grid-2" style="flex:1;">
+      <div class="card card-accent">
+        <div class="card-label card-label-accent">Dependent Variable</div>
+        <div class="h4">Perceived Price Fairness</div>
+        <div class="small">Multi-item, 7-point scale. Adapted from Habel et al. (2016). Captures both outcome and procedural dimensions of fairness evaluation.</div>
+      </div>
+      <div class="card card-accent">
+        <div class="card-label card-label-accent">Mediator</div>
+        <div class="h4">Perceived Transparency</div>
+        <div class="small">Ease of access and clarity of pricing logic. Adapted from Rothenberger (2015). Key mediating construct in the H4 analysis.</div>
+      </div>
+      <div class="card card-muted">
+        <div class="card-label">Moderator — H2</div>
+        <div class="h4">Technology Anxiety</div>
+        <div class="small">7-point scale. Meuter, Bitner, Ostrom &amp; Brown (2005). Apprehension and discomfort with technological systems. JN significant region: 2.53–3.88.</div>
+      </div>
+      <div class="card card-muted">
+        <div class="card-label">Moderator — H3</div>
+        <div class="h4">Wastefulness with Money</div>
+        <div class="small">Spendthrift–tightwad scale. Rick, Cryder &amp; Loewenstein (2008). Captures tendency to spend freely without regard for opportunity costs.</div>
+      </div>
+    </div>
+    <div class="caption" style="margin-top:14px;">Full scale items, reliability coefficients (α), and descriptive statistics available in supplementary materials.</div>
+  </div>
+</div>
+
+<!-- B7: Sensitivity / Manipulation Check -->
+<div class="slide" id="sb8"
+  data-section="Q&A" data-num="B8"
+  data-notes="For: 'Your manipulation check shows only 65% accuracy — is that acceptable?' · No differential leakage between conditions (χ² = 1.52, p = .218). That is the key test: not whether everyone understood, but whether one condition systematically produced better comprehension. It did not. · Absolute rates around 65% are common in complex vignette experiments. · The sensitivity analysis is your strongest defense: when restricted to participants who passed the check, the effect actually strengthens (Δ = −0.417, p = .033). The finding is not driven by confusion.">
+  <div class="backup-tag">Backup — Q&amp;A</div>
+  <div class="topbar">
+    <div class="section-label">Q&amp;A Backup</div>
+    <div class="slide-num">B8</div>
+  </div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="h2" style="margin-bottom:22px;">Manipulation check &amp; sensitivity analysis</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:22px;flex-shrink:0;">
+      <div class="card card-border" style="text-align:center;padding:20px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:700;color:var(--dark);line-height:1;">69.0%</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;">Correct ID · Human Cond.</div>
+      </div>
+      <div class="card card-border" style="text-align:center;padding:20px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:700;color:var(--dark);line-height:1;">62.5%</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;">Correct ID · AI Cond.</div>
+      </div>
+      <div class="card card-accent" style="text-align:center;padding:20px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:700;color:var(--accent);line-height:1;">p = .218</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;">χ²(1, 601) = 1.52 · No differential leakage</div>
+      </div>
+    </div>
+    <div class="grid-2" style="gap:18px;">
+      <div class="card card-muted">
+        <div class="h3" style="margin-bottom:8px;">Why this is acceptable</div>
+        <div class="small">The manipulation check tests <em>differential leakage</em> — whether one condition produced systematically better understanding. It did not (p = .218). Absolute accuracy ~65% is within normal range for complex experimental vignettes.</div>
+      </div>
+      <div class="card card-accent">
+        <div class="h3" style="margin-bottom:8px;">Sensitivity analysis</div>
+        <div class="small">Restricted to participants who correctly identified the pricing algorithm: Δ = −0.417, 95% CI [−0.800, −0.035], p = .033. The effect <em>strengthens</em>. The finding is not driven by misunderstanding — it is driven by accurate perception of the manipulation.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- B4: H2 Floodlight plot -->
+<div class="slide" id="sb4"
+  data-section="Q&A" data-num="B4"
+  data-notes="For: 'How does technology anxiety moderate the effect?' · Honest answer: it doesn't, reliably — the interaction is nonsignificant (b=−0.09, p=.492). · The floodlight shows the conditional effect of algorithm type across technology anxiety. The teal band (2.53–3.88) is where that effect is significant (p<.05). · Key point if pressed: the line is straight and monotonic — the effect is actually LARGEST at high anxiety (≈−0.68 at 7.0), but the CI widens sharply there (SE ≈ 0.15 in the middle → ≈ 0.56 at the top), so it isn't significant. The mid-range band is where estimates are most precise (near the mean of anxiety), NOT a substantive cutoff. · So do not claim the effect 'concentrates' at moderate anxiety or 'collapses' at high anxiety — that misreads a precision pattern as a psychological one. We report the band descriptively and do not claim moderation.">
+  <div class="backup-tag">Backup — Q&amp;A</div>
+  <div class="topbar">
+    <div class="section-label">Q&amp;A Backup</div>
+    <div class="slide-num">B4</div>
+  </div>
+  <div class="content" style="display:flex;flex-direction:column;">
+    <div class="rule"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;flex-shrink:0;">
+      <div class="h2">H2: A mid-range band — bounded by precision, not a cutoff</div>
+      <span class="tag tag-part">Moderation not established</span>
+    </div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:0;overflow:hidden;">
+      <img src="h2-jn-techanx.svg" style="max-width:100%;max-height:100%;width:auto;height:auto;display:block;" alt="Johnson-Neyman floodlight plot: conditional effect of algorithm type on perceived price fairness across technology anxiety">
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,0.08);margin-top:18px;flex-shrink:0;">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">N = 601 · PROCESS Model 1 · Johnson–Neyman technique</span>
+      <span style="display:inline-block;width:1px;height:11px;background:rgba(0,0,0,0.18);"></span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">Significant region: 2.53–3.88 (7-pt scale) · Overall interaction: b = −0.09, p = .492</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /scaler -->
+
+<!-- NOTES PANEL -->
+<div id="notes-panel">
+  <div class="notes-head">Speaker Notes</div>
+  <div id="notes-body"></div>
+</div>
+
+<!-- MENU OVERLAY -->
+<div id="menu-overlay">
+  <button class="menu-close-btn" onclick="toggleMenu()">✕ Close (M)</button>
+  <div class="menu-title">Slide Navigator</div>
+  <div class="menu-sub">Click any slide to jump directly. Press M to close.</div>
+  <div class="menu-section">Main Presentation</div>
+  <div class="menu-grid" id="main-grid"></div>
+  <div class="menu-section">Q&amp;A Backup Slides</div>
+  <div class="menu-grid" id="backup-grid"></div>
+</div>
+
+<!-- Hint -->
+<div id="hint">← → Navigate &nbsp;·&nbsp; P Notes &nbsp;·&nbsp; M Menu</div>
+
+<script>
+// ================================================================
+// SLIDE REGISTRY
+// ================================================================
+const MAIN = [
+  { id:'s0',    n:'',       t:'Title' },
+  { id:'s1',    n:'02/13',  t:'Opening — Prices Change 100 Times a Day' },
+  { id:'s2',    n:'03/13',  t:'Two Systems. One Question.' },
+  { id:'s3',    n:'04/13',  t:'Theory: Why Fairness Differs',  steps: 3 },
+  { id:'s4mod', n:'05/13',  t:'Theory: Who Feels It Most',     steps: 2 },
+  { id:'s4',    n:'06/13',  t:'Conceptual Framework' },
+  { id:'s6',    n:'07/13',  t:'Study Design & Measures' },
+  { id:'s7',    n:'08/13',  t:'H1: Main Effect' },
+  { id:'s8',    n:'09/13',  t:'H4: Transparency Mediation' },
+  { id:'s9',    n:'10/13',  t:'H2 & H3: Moderation' },
+  { id:'s10',   n:'11/13',  t:'Discussion' },
+  { id:'s11',   n:'12/13',  t:'Implications for Retailers' },
+  { id:'s12',   n:'13/13',  t:'Thank You' },
+];
+
+const BACKUP = [
+  { id:'sb1', n:'B1', t:'AI Definition — Stimulus Text' },
+  { id:'sb2', n:'B2', t:'p = .080 (Wastefulness)' },
+  { id:'sb3', n:'B3', t:'Johnson-Neyman Detail' },
+  { id:'sb4', n:'B4', t:'H2 Floodlight — Technology Anxiety' },
+  { id:'sb5', n:'B5', t:'External Validity' },
+  { id:'sb6', n:'B6', t:'Hybrid Human-AI Systems' },
+  { id:'sb7', n:'B7', t:'Scale & Measurement Details' },
+  { id:'sb8', n:'B8', t:'Manipulation Check & Sensitivity' },
+  { id:'sb9', n:'B9', t:'Research Agenda — Future Directions' },
+];
+
+const ALL = [...MAIN, ...BACKUP];
+let cur = 0;
+let stepIdx = 0;
+let notesOpen = false;
+let menuOpen = false;
+let barAnimated = false;
+
+// ================================================================
+// SCALING
+// ================================================================
+function scale() {
+  const el = document.getElementById('scaler');
+  const sx = window.innerWidth  / 1600;
+  const sy = window.innerHeight / 900;
+  const s  = Math.min(sx, sy);
+  const ox = (window.innerWidth  - 1600 * s) / 2;
+  const oy = (window.innerHeight - 900  * s) / 2;
+  el.style.transform = `translate(${ox}px,${oy}px) scale(${s})`;
+}
+window.addEventListener('resize', scale);
+scale();
+
+// Author footer on every slide except title (s0) and closing (s12, which has built-in attribution)
+document.querySelectorAll('.slide:not(#s0):not(#s12)').forEach(function(slide) {
+  var f = document.createElement('div');
+  f.className = 'slide-footer';
+  f.textContent = 'Alexander F. Hem · Anders Mamen';
+  slide.appendChild(f);
+});
+
+// ================================================================
+// NAVIGATION
+// ================================================================
+function applyReveals(slideId, step) {
+  const slide = document.getElementById(slideId);
+  if (!slide) return;
+  slide.querySelectorAll('[data-step]').forEach(el => {
+    el.classList.toggle('visible', parseInt(el.dataset.step) <= step);
+  });
+}
+
+function go(idx) {
+  const prev = document.getElementById(ALL[cur].id);
+  if (prev) prev.classList.remove('active');
+
+  // Reset bar if leaving s7
+  if (ALL[cur].id === 's7') resetBar();
+
+  cur = Math.max(0, Math.min(ALL.length - 1, idx));
+  stepIdx = 0;
+
+  const next = document.getElementById(ALL[cur].id);
+  if (next) next.classList.add('active');
+
+  // Reset any reveals on the incoming slide
+  applyReveals(ALL[cur].id, 0);
+
+  updateProgress();
+  renderNotes();
+  highlightMenu();
+
+  // Trigger bar animation on s7
+  if (ALL[cur].id === 's7') {
+    barAnimated = false;
+    setTimeout(animateBar, 350);
+  }
+}
+
+function advance() {
+  const slide = ALL[cur];
+  const maxSteps = slide.steps || 0;
+  if (stepIdx < maxSteps) {
+    stepIdx++;
+    applyReveals(slide.id, stepIdx);
+  } else {
+    const limit = cur >= MAIN.length ? ALL.length - 1 : MAIN.length - 1;
+    if (cur < limit) go(cur + 1);
+  }
+}
+
+function retreat() {
+  if (stepIdx > 0) {
+    stepIdx--;
+    applyReveals(ALL[cur].id, stepIdx);
+  } else {
+    const floor = cur >= MAIN.length ? MAIN.length : 0;
+    if (cur > floor) go(cur - 1);
+  }
+}
+
+function updateProgress() {
+  const pct = cur < MAIN.length
+    ? (cur / (MAIN.length - 1)) * 100
+    : 100;
+  const bar = document.getElementById('progress-bar');
+  bar.style.width = pct + '%';
+  bar.style.opacity = cur >= MAIN.length ? '0.35' : '1';
+}
+
+// ================================================================
+// BAR CHART
+// ================================================================
+const HUMAN_M = 4.719572;
+const AI_M    = 4.401515;
+const SCALE   = 7;
+const TRACK_H = 340;
+
+function animateBar() {
+  if (barAnimated) return;
+  barAnimated = true;
+  const hH = (HUMAN_M / SCALE) * TRACK_H;
+  const aH = (AI_M    / SCALE) * TRACK_H;
+  const bh = document.getElementById('bar-human');
+  const ba = document.getElementById('bar-ai');
+  const vh = document.getElementById('val-human');
+  const va = document.getElementById('val-ai');
+  if (bh) { bh.style.transition = 'height 0.9s cubic-bezier(0.22,1,0.36,1)'; bh.style.height = hH + 'px'; }
+  if (ba) { ba.style.transition = 'height 0.9s cubic-bezier(0.22,1,0.36,1) 0.12s'; ba.style.height = aH + 'px'; }
+  setTimeout(() => {
+    if (vh) vh.textContent = HUMAN_M.toFixed(2);
+    if (va) va.textContent = AI_M.toFixed(2);
+  }, 700);
+}
+
+function resetBar() {
+  barAnimated = false;
+  ['bar-human','bar-ai'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.transition = 'none'; el.style.height = '0'; }
+  });
+  ['val-human','val-ai'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+}
+
+// ================================================================
+// NOTES — opens in a separate popup window (presenter screen only)
+// ================================================================
+let notesWindow = null;
+
+function getNotesContent() {
+  const el = document.getElementById(ALL[cur].id);
+  return el ? (el.dataset.notes || '') : '';
+}
+
+function pushNotesToWindow() {
+  if (!notesWindow || notesWindow.closed) return;
+  const slide = ALL[cur];
+  const raw = getNotesContent();
+  const parts = raw.split('·').map(s => s.trim()).filter(Boolean);
+  const bullets = parts.map(p => `<li>${p}</li>`).join('');
+  notesWindow.document.body.innerHTML =
+    `<div class="label">Slide ${slide.n || '—'} &nbsp;·&nbsp; ${slide.t}</div>` +
+    `<ul>${bullets || '<li><em>No notes for this slide.</em></li>'}</ul>`;
+}
+
+function openNotesWindow() {
+  if (notesWindow && !notesWindow.closed) {
+    notesWindow.focus();
+    pushNotesToWindow();
+    return;
+  }
+  notesWindow = window.open('', 'speaker_notes',
+    'width=660,height=500,left=20,top=20,resizable=yes,scrollbars=yes');
+  notesWindow.document.head.innerHTML = `<title>Speaker Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Barlow',system-ui,sans-serif;background:#111111;color:rgba(255,255,255,0.72);padding:32px 36px;min-height:100vh}
+    .label{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:#C61932;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:14px}
+    ul{list-style:none;display:flex;flex-direction:column;gap:16px}
+    li{font-size:21px;line-height:1.75;padding-left:26px;position:relative}
+    li::before{content:'·';position:absolute;left:0;color:#9098a8;font-size:26px;line-height:1.45}
+    em{color:#9098a8;font-style:italic}
+  </style>`;
+  pushNotesToWindow();
+}
+
+function renderNotes() {
+  pushNotesToWindow();
+}
+
+function toggleNotes() {
+  openNotesWindow();
+}
+
+// ================================================================
+// MENU
+// ================================================================
+function buildMenu() {
+  const mg = document.getElementById('main-grid');
+  const bg = document.getElementById('backup-grid');
+
+  MAIN.forEach((s, i) => {
+    const d = document.createElement('div');
+    d.className = 'menu-item' + (i === 0 ? ' cur' : '');
+    d.dataset.idx = i;
+    d.innerHTML = `<div class="menu-item-n">${String(i+1).padStart(2,'0')}</div><div class="menu-item-t">${s.t}</div>`;
+    d.addEventListener('click', () => { go(i); toggleMenu(); });
+    mg.appendChild(d);
+  });
+
+  BACKUP.forEach((s, i) => {
+    const gi = MAIN.length + i;
+    const d = document.createElement('div');
+    d.className = 'menu-item';
+    d.dataset.idx = gi;
+    d.innerHTML = `<div class="menu-item-n">B${i+1}</div><div class="menu-item-t">${s.t}</div>`;
+    d.addEventListener('click', () => { go(gi); toggleMenu(); });
+    bg.appendChild(d);
+  });
+}
+
+function highlightMenu() {
+  document.querySelectorAll('.menu-item').forEach(el => {
+    el.classList.toggle('cur', parseInt(el.dataset.idx) === cur);
+  });
+}
+
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  document.getElementById('menu-overlay').classList.toggle('open', menuOpen);
+}
+
+// ================================================================
+// KEYBOARD
+// ================================================================
+document.addEventListener('keydown', e => {
+  if (menuOpen) {
+    if (e.key === 'Escape' || e.key === 'm' || e.key === 'M') toggleMenu();
+    return;
+  }
+  switch (e.key) {
+    case 'ArrowRight': case 'ArrowDown': case ' ':
+      e.preventDefault();
+      advance();
+      break;
+    case 'ArrowLeft': case 'ArrowUp':
+      e.preventDefault();
+      retreat();
+      break;
+    case 'p': case 'P':
+      toggleNotes();
+      break;
+    case 'm': case 'M':
+      toggleMenu();
+      break;
+    case 'Escape':
+      if (notesOpen) toggleNotes();
+      break;
+  }
+});
+
+// ================================================================
+// POINTER NAVIGATION — click anywhere on slide to advance
+// ================================================================
+document.getElementById('scaler').addEventListener('click', function(e) {
+  if (menuOpen) return;
+  if (document.getElementById('notes-panel').classList.contains('open')) return;
+  if (e.target.closest('#notes-panel') || e.target.closest('#menu-overlay')) return;
+  advance();
+});
+
+// ================================================================
+// INIT
+// ================================================================
+buildMenu();
+updateProgress();
+renderNotes();
+</script>
+</body>
+</html>
